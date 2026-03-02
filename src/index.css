@@ -1,0 +1,457 @@
+@import "tailwindcss";
+
+/* ========== Science Subject Accent Tokens ========== */
+:root {
+  --physics: #3B82F6;
+  --physics-bg: rgba(59, 130, 246, 0.12);
+  --chemistry: #A855F7;
+  --chemistry-bg: rgba(168, 85, 247, 0.12);
+  --biology: #10B981;
+  --biology-bg: rgba(16, 185, 129, 0.12);
+  --earth: #F59E0B;
+  --earth-bg: rgba(245, 158, 11, 0.12);
+}
+
+/* ========== Design Tokens: Light ========== */
+:root[data-theme="light"] {
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --card-alt: #F1F5F9;
+  --text: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --border: #E2E8F0;
+  --border-light: #F1F5F9;
+  --brand: #0F766E;
+  --brand-light: #14B8A6;
+  --brand-dark: #0D5D56;
+  --brand-bg: rgba(15, 118, 110, 0.08);
+  --success: #059669;
+  --success-bg: rgba(5, 150, 105, 0.08);
+  --warning: #B45309;
+  --warning-bg: rgba(180, 83, 9, 0.08);
+  --error: #B91C1C;
+  --info: #5B21B6;
+  --info-bg: rgba(91, 33, 182, 0.08);
+  --purple: #6D28D9;
+  --surface-overlay: rgba(0, 0, 0, 0.4);
+  --sidebar-bg: rgba(248, 250, 252, 0.95);
+  --scrollbar-thumb: #94A3B8;
+  --scrollbar-hover: #64748B;
+  /* subject aliases (same in both themes) */
+  --subj-physics: var(--physics);
+  --subj-physics-bg: var(--physics-bg);
+  --subj-chemistry: var(--chemistry);
+  --subj-chemistry-bg: var(--chemistry-bg);
+  --subj-biology: var(--biology);
+  --subj-biology-bg: var(--biology-bg);
+  --subj-earth: var(--earth);
+  --subj-earth-bg: var(--earth-bg);
+}
+
+/* ========== Design Tokens: Dark ========== */
+:root[data-theme="dark"] {
+  --bg: #0F172A;
+  --card: #1E293B;
+  --card-alt: #334155;
+  --text: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --border: #334155;
+  --border-light: #1E293B;
+  --brand: #2DD4BF;
+  --brand-light: #5EEAD4;
+  --brand-dark: #14B8A6;
+  --brand-bg: rgba(45, 212, 191, 0.12);
+  --success: #34D399;
+  --success-bg: rgba(52, 211, 153, 0.12);
+  --warning: #FBBF24;
+  --warning-bg: rgba(251, 191, 36, 0.12);
+  --error: #F87171;
+  --info: #A78BFA;
+  --info-bg: rgba(167, 139, 250, 0.12);
+  --purple: #A78BFA;
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+  --sidebar-bg: rgba(15, 23, 42, 0.95);
+  --scrollbar-thumb: #475569;
+  --scrollbar-hover: #64748B;
+  --subj-physics: var(--physics);
+  --subj-physics-bg: var(--physics-bg);
+  --subj-chemistry: var(--chemistry);
+  --subj-chemistry-bg: var(--chemistry-bg);
+  --subj-biology: var(--biology);
+  --subj-biology-bg: var(--biology-bg);
+  --subj-earth: var(--earth);
+  --subj-earth-bg: var(--earth-bg);
+}
+
+@theme {
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Source Serif 4', 'DM Sans', ui-sans-serif, system-ui, serif;
+  --color-brand: var(--brand);
+  --color-brand-light: var(--brand-light);
+  --color-brand-dark: var(--brand-dark);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-info: var(--info);
+  --color-surface: var(--card);
+  --color-bg: var(--bg);
+  --color-text-primary: var(--text);
+  --color-text-secondary: var(--text-secondary);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth generic interactive element transitions */
+button,
+a[role="button"],
+.btn {
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+button:active:not(:disabled),
+a[role="button"]:active:not(:disabled),
+.btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-hover);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ====== Animations ====== */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0) scale(0.985);
+    filter: blur(6px);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translate3d(0, -4px, 0) scale(1.002);
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.animate-page-enter {
+  animation: pageEnter 0.58s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.99);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translate3d(0, -3px, 0) scale(1.001);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 110%, 0);
+  }
+
+  75% {
+    opacity: 1;
+    transform: translate3d(0, -2%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  72% {
+    opacity: 1;
+    transform: scale(1.015);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes tabEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-tab-enter {
+  animation: tabEnter 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+
+  25% {
+    transform: translateY(-15px) rotate(2deg);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(-1deg);
+    opacity: 0.85;
+  }
+
+  75% {
+    transform: translateY(-20px) rotate(1deg);
+    opacity: 0.95;
+  }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, var(--card-alt) 25%, var(--border-light) 50%, var(--card-alt) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* Subject badge helpers */
+.badge-physics {
+  background: var(--physics-bg);
+  color: var(--physics);
+}
+
+.badge-chemistry {
+  background: var(--chemistry-bg);
+  color: var(--chemistry);
+}
+
+.badge-biology {
+  background: var(--biology-bg);
+  color: var(--biology);
+}
+
+.badge-earth {
+  background: var(--earth-bg);
+  color: var(--earth);
+}
+
+/* Scoped dark-mode remediation for legacy hardcoded utility colors */
+:root[data-theme="dark"] .portfolio-page,
+:root[data-theme="dark"] .creator-studio-page {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .portfolio-page .bg-white,
+:root[data-theme="dark"] .creator-studio-page .bg-white {
+  background-color: var(--card) !important;
+}
+
+:root[data-theme="dark"] .portfolio-page .bg-gray-100,
+:root[data-theme="dark"] .portfolio-page .bg-gray-200,
+:root[data-theme="dark"] .portfolio-page .bg-\[\#F5F5F7\],
+:root[data-theme="dark"] .portfolio-page .bg-\[\#F5F5F7\]\/50,
+:root[data-theme="dark"] .creator-studio-page .bg-gray-100,
+:root[data-theme="dark"] .creator-studio-page .bg-gray-200,
+:root[data-theme="dark"] .creator-studio-page .bg-\[\#F5F5F7\],
+:root[data-theme="dark"] .creator-studio-page .bg-\[\#F5F5F7\]\/50 {
+  background-color: var(--card-alt) !important;
+}
+
+:root[data-theme="dark"] .portfolio-page .border-gray-50,
+:root[data-theme="dark"] .portfolio-page .border-gray-100,
+:root[data-theme="dark"] .portfolio-page .border-gray-200,
+:root[data-theme="dark"] .portfolio-page .border-gray-300,
+:root[data-theme="dark"] .creator-studio-page .border-gray-50,
+:root[data-theme="dark"] .creator-studio-page .border-gray-100,
+:root[data-theme="dark"] .creator-studio-page .border-gray-200,
+:root[data-theme="dark"] .creator-studio-page .border-gray-300 {
+  border-color: var(--border) !important;
+}
+
+:root[data-theme="dark"] .portfolio-page .text-\[\#111827\],
+:root[data-theme="dark"] .creator-studio-page .text-\[\#111827\] {
+  color: var(--text) !important;
+}
+
+:root[data-theme="dark"] .portfolio-page .text-\[\#4B5563\],
+:root[data-theme="dark"] .portfolio-page .text-gray-300,
+:root[data-theme="dark"] .creator-studio-page .text-\[\#4B5563\],
+:root[data-theme="dark"] .creator-studio-page .text-gray-300 {
+  color: var(--text-secondary) !important;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
