@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import TopBar from './components/layout/TopBar';
 import BottomNav from './components/layout/BottomNav';
+import Breadcrumbs from './components/layout/Breadcrumbs';
+import SiteFooter from './components/layout/SiteFooter';
 import HomePublic from './pages/HomePublic';
 import HomeDashboard from './pages/HomeDashboard';
 import Dashboard from './pages/Dashboard';
@@ -10,16 +12,20 @@ import ResourcesPage from './pages/ResourcesPage';
 import CommunityPage from './pages/CommunityPage';
 import PortfolioPage from './pages/PortfolioPage';
 import CreatorStudioPage from './pages/CreatorStudioPage';
+import LessonsPage from './pages/LessonsPage';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
+import AboutPage from './pages/AboutPage';
 import { useLocalStore } from './store/useLocalStore';
+import { PAGE_META, type AppPage, type BreadcrumbItem } from './config/site';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState<AppPage>('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [detailBreadcrumbs, setDetailBreadcrumbs] = useState<BreadcrumbItem[]>([]);
   const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
   const { isSignedIn, signOut } = useLocalStore();
 
@@ -30,16 +36,63 @@ export default function App() {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  // Pages that guests can access without signing in
-  const GUEST_PAGES = ['home', 'schedule', 'resources'];
+  const GUEST_PAGES: AppPage[] = ['home', 'about', 'schedule', 'resources', 'lessons', 'signin', 'signup', 'auth'];
   const needsAuth = !isSignedIn && !GUEST_PAGES.includes(currentPage);
+  const metaPage = (currentPage === 'auth' ? 'signin' : currentPage) as AppPage;
+  const pageMeta = PAGE_META[metaPage];
+
+  useEffect(() => {
+    setDetailBreadcrumbs([]);
+  }, [currentPage]);
+
+  useEffect(() => {
+    document.title = pageMeta.title;
+    const description = document.querySelector('meta[name="description"]') ?? document.createElement('meta');
+    description.setAttribute('name', 'description');
+    description.setAttribute('content', pageMeta.description);
+    if (!description.parentElement) {
+      document.head.appendChild(description);
+    }
+  }, [pageMeta]);
+
+  const breadcrumbs = useMemo(
+    () => [...pageMeta.breadcrumbs, ...detailBreadcrumbs],
+    [pageMeta.breadcrumbs, detailBreadcrumbs],
+  );
+
+  useEffect(() => {
+    const existing = document.getElementById('breadcrumb-jsonld');
+    if (existing) {
+      existing.remove();
+    }
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'breadcrumb-jsonld';
+    script.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((crumb, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: crumb.label,
+        item: crumb.page ? `/${crumb.page}` : undefined,
+      })),
+    });
+    document.head.appendChild(script);
+    return () => script.remove();
+  }, [breadcrumbs]);
+
+  const navigate = (page: string) => {
+    setCurrentPage(page as AppPage);
+    setSidebarOpen(false);
+  };
 
   const renderPage = () => {
     if (needsAuth) {
       return (
         <AuthPage
-          onAuthSuccess={() => setCurrentPage('home')}
-          onGoHome={() => setCurrentPage('home')}
+          onAuthSuccess={() => navigate('home')}
+          onGoHome={() => navigate('home')}
           initialTab="signin"
         />
       );
@@ -47,18 +100,24 @@ export default function App() {
     switch (currentPage) {
       case 'home':
         return isSignedIn
-          ? <HomeDashboard onNavigate={setCurrentPage} />
-          : <HomePublic onNavigate={setCurrentPage} onSignIn={() => setCurrentPage('auth')} />;
+          ? <HomeDashboard onNavigate={navigate} />
+          : <HomePublic onNavigate={navigate} onSignIn={() => navigate('signin')} />;
+      case 'about':
+        return <AboutPage onNavigate={navigate} />;
       case 'auth':
-        return <AuthPage onAuthSuccess={() => setCurrentPage('home')} onGoHome={() => setCurrentPage('home')} />;
+      case 'signin':
+        return <AuthPage onAuthSuccess={() => navigate('home')} onGoHome={() => navigate('home')} initialTab="signin" />;
+      case 'signup':
+        return <AuthPage onAuthSuccess={() => navigate('home')} onGoHome={() => navigate('home')} initialTab="signup" />;
       case 'dashboard':
-        return <Dashboard onNavigate={setCurrentPage} />;
+        return <Dashboard onNavigate={navigate} />;
       case 'schedule':
         return (
           <SchedulePage
             searchQuery={searchQuery}
             isSignedIn={isSignedIn}
-            onNavigate={setCurrentPage}
+            onNavigate={navigate}
+            onBreadcrumbChange={setDetailBreadcrumbs}
           />
         );
       case 'resources':
@@ -66,33 +125,37 @@ export default function App() {
           <ResourcesPage
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
+            onBreadcrumbChange={setDetailBreadcrumbs}
           />
         );
+      case 'lessons':
+        return <LessonsPage onBreadcrumbChange={setDetailBreadcrumbs} />;
       case 'community':
-        return <CommunityPage />;
+        return <CommunityPage onBreadcrumbChange={setDetailBreadcrumbs} />;
       case 'portfolio':
-        return <PortfolioPage />;
+        return <PortfolioPage onBreadcrumbChange={setDetailBreadcrumbs} />;
       case 'creator':
-        return <CreatorStudioPage />;
+        return <CreatorStudioPage onBreadcrumbChange={setDetailBreadcrumbs} />;
       case 'onboarding':
-        return <Onboarding onNavigate={setCurrentPage} />;
+        return <Onboarding onNavigate={navigate} />;
       case 'profile':
         return (
           <Profile
-            onNavigate={setCurrentPage}
-            onSignOut={() => { signOut(); setCurrentPage('home'); }}
+            onNavigate={navigate}
+            onSignOut={() => { signOut(); navigate('home'); }}
           />
         );
       default:
         return isSignedIn
-          ? <HomeDashboard onNavigate={setCurrentPage} />
-          : <HomePublic onNavigate={setCurrentPage} onSignIn={() => setCurrentPage('auth')} />;
+          ? <HomeDashboard onNavigate={navigate} />
+          : <HomePublic onNavigate={navigate} onSignIn={() => navigate('signin')} />;
     }
   };
 
   const sidebarDesktopWidth = isSignedIn ? (sidebarExpanded ? 240 : 68) : 0;
-  const isAuthFullscreen = needsAuth || currentPage === 'auth';
+  const isAuthFullscreen = needsAuth || currentPage === 'auth' || currentPage === 'signin' || currentPage === 'signup';
   const isUnsignedHome = !isSignedIn && currentPage === 'home';
+  const shouldShowFooter = !isAuthFullscreen && !isUnsignedHome;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
@@ -100,7 +163,7 @@ export default function App() {
         <>
           <Sidebar
             currentPage={currentPage}
-            onNavigate={setCurrentPage}
+            onNavigate={navigate}
             sidebarOpen={sidebarOpen}
             setSidebarOpen={setSidebarOpen}
             sidebarExpanded={sidebarExpanded}
@@ -110,7 +173,7 @@ export default function App() {
           {!isUnsignedHome && (
             <TopBar
               currentPage={currentPage}
-              onNavigate={setCurrentPage}
+              onNavigate={navigate}
               onOpenSidebar={() => setSidebarOpen(true)}
               isSignedIn={isSignedIn}
               sidebarExpanded={sidebarExpanded}
@@ -129,14 +192,18 @@ export default function App() {
           renderPage()
         ) : (
           <div className="p-4 lg:p-6 max-w-7xl mx-auto animate-page-enter" key={currentPage}>
+            <Breadcrumbs items={breadcrumbs} onNavigate={navigate} />
             {renderPage()}
           </div>
         )}
       </main>
 
+      {shouldShowFooter && <SiteFooter onNavigate={navigate} isSignedIn={isSignedIn} />}
+
       {isSignedIn && !isAuthFullscreen && (
-        <BottomNav currentPage={currentPage} onNavigate={setCurrentPage} />
+        <BottomNav currentPage={currentPage} onNavigate={navigate} />
       )}
+
     </div>
   );
 }

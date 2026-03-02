@@ -67,7 +67,14 @@ export default function TopBar({ currentPage, onNavigate, onOpenSidebar, isSigne
                             <h1 className="text-lg font-bold font-[family-name:var(--font-display)]" style={{ color: 'var(--text)' }}>ScienceSpire</h1>
                         </button>
                     )}
-                    <div className="relative w-96">
+                    {!isSignedIn && (
+                        <nav className="hidden xl:flex items-center gap-4 text-sm mr-6" style={{ color: 'var(--text-secondary)' }}>
+                            <button onClick={() => onNavigate('about')} className="hover:underline underline-offset-2">About</button>
+                            <button onClick={() => onNavigate('schedule')} className="hover:underline underline-offset-2">Schedule</button>
+                            <button onClick={() => onNavigate('resources')} className="hover:underline underline-offset-2">Resources</button>
+                        </nav>
+                    )}
+                    <div className="relative w-72 xl:w-96">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2" size={18} style={{ color: 'var(--text-secondary)' }} />
                         <input
                             type="search"
@@ -97,7 +104,7 @@ export default function TopBar({ currentPage, onNavigate, onOpenSidebar, isSigne
                         />
                         {showSearchResults && normalizedQuery && (
                             <div
-                                className="absolute top-[calc(100%+8px)] left-0 right-0 rounded-xl border shadow-lg overflow-hidden"
+                                className="absolute top-[calc(100%+8px)] left-0 right-0 rounded-xl border shadow-lg overflow-hidden animate-slide-down"
                                 style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}
                             >
                                 {searchResults.length > 0 ? searchResults.map(item => (
@@ -158,10 +165,28 @@ export default function TopBar({ currentPage, onNavigate, onOpenSidebar, isSigne
                             </div>
                         </button>
                     )}
+                    {!isSignedIn && (
+                        <>
+                            <button
+                                onClick={() => onNavigate('signin')}
+                                className="px-3 py-2 rounded-lg text-sm font-medium min-h-[40px]"
+                                style={{ color: 'var(--text)' }}
+                            >
+                                Sign in
+                            </button>
+                            <button
+                                onClick={() => onNavigate('signup')}
+                                className="px-3 py-2 rounded-lg text-sm font-semibold min-h-[40px]"
+                                style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+                            >
+                                Sign up
+                            </button>
+                        </>
+                    )}
                 </div>
                 {isSignedIn && showNotifications && (
                     <div
-                        className="absolute right-6 top-14 w-80 rounded-xl border shadow-xl overflow-hidden z-40"
+                        className="absolute right-6 top-14 w-80 rounded-xl border shadow-xl overflow-hidden z-40 animate-slide-down"
                         style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}
                     >
                         <div className="px-4 py-3 border-b text-sm font-semibold" style={{ borderColor: 'var(--border)', color: 'var(--text)' }}>
@@ -220,12 +245,21 @@ export default function TopBar({ currentPage, onNavigate, onOpenSidebar, isSigne
                 >
                     {themeMode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
                 </button>
+                {!isSignedIn && (
+                    <button
+                        onClick={() => onNavigate('signin')}
+                        className="px-3 py-2 rounded-lg text-sm font-medium min-h-[40px]"
+                        style={{ color: 'var(--text)' }}
+                    >
+                        Sign in
+                    </button>
+                )}
                 {isSignedIn && (
                 <button
                     onClick={() => onNavigate('profile')}
                     className="relative p-2 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center"
                     style={{ color: 'var(--text-secondary)' }}
-                    aria-label={`Notifications (${notifications.length} new)`}
+                    aria-label={`Open profile${notifications.length > 0 ? ` — ${notifications.length} new notification${notifications.length !== 1 ? 's' : ''}` : ''}`}
                 >
                     <Bell size={20} />
                     {notifications.length > 0 && (

@@ -181,6 +181,7 @@ html {
 
 .animate-page-enter {
   animation: pageEnter 0.58s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
 }
 
 @keyframes fadeIn {
@@ -202,6 +203,7 @@ html {
 
 .animate-fade-in {
   animation: fadeIn 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
 }
 
 @keyframes slideUp {
@@ -223,6 +225,7 @@ html {
 
 .animate-slide-up {
   animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
 }
 
 @keyframes scaleIn {
@@ -244,6 +247,7 @@ html {
 
 .animate-scale-in {
   animation: scaleIn 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
 }
 
 @keyframes slideInLeft {
@@ -260,6 +264,54 @@ html {
 
 .animate-slide-in-left {
   animation: slideInLeft 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes tabEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-tab-enter {
+  animation: tabEnter 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes float {

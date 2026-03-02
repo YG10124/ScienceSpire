@@ -15,7 +15,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
   return (
     <div className="space-y-6 lg:space-y-8">
       {/* ====== HERO GREETING ====== */}
-      <div className="rounded-2xl p-6 lg:p-8 text-white relative overflow-hidden" style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-light))' }}>
+      <div className="rounded-2xl p-6 lg:p-8 text-white relative overflow-hidden animate-fade-in" style={{ background: 'linear-gradient(135deg, var(--brand), var(--brand-light))' }}>
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4" />
         <div className="absolute bottom-0 left-1/2 w-48 h-48 bg-white/5 rounded-full translate-y-1/2" />
         <div className="relative">
@@ -48,8 +48,8 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4">
         <button
           onClick={() => onNavigate('schedule')}
-          className="rounded-xl p-4 lg:p-5 text-left hover:shadow-md transition-all border group min-h-[48px]"
-          style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}
+          className="rounded-xl p-4 lg:p-5 text-left hover:shadow-md hover:-translate-y-0.5 transition-all border group min-h-[48px] animate-fade-in"
+          style={{ animationDelay: '80ms', backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}
         >
           <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 transition-colors" style={{ backgroundColor: 'var(--brand-bg)' }}>
             <Play size={20} style={{ color: 'var(--brand)' }} />
@@ -63,8 +63,8 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
 
         <button
           onClick={() => onNavigate('dashboard')}
-          className="rounded-xl p-4 lg:p-5 text-left hover:shadow-md transition-all border group min-h-[48px]"
-          style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}
+          className="rounded-xl p-4 lg:p-5 text-left hover:shadow-md hover:-translate-y-0.5 transition-all border group min-h-[48px] animate-fade-in"
+          style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', animationDelay: '140ms' }}
         >
           <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 transition-colors" style={{ backgroundColor: 'var(--success-bg)' }}>
             <Target size={20} style={{ color: 'var(--success)' }} />
@@ -78,8 +78,8 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
 
         <button
           onClick={() => onNavigate('community')}
-          className="rounded-xl p-4 lg:p-5 text-left hover:shadow-md transition-all border group min-h-[48px]"
-          style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}
+          className="rounded-xl p-4 lg:p-5 text-left hover:shadow-md hover:-translate-y-0.5 transition-all border group min-h-[48px] animate-fade-in"
+          style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', animationDelay: '200ms' }}
         >
           <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 transition-colors" style={{ backgroundColor: 'var(--warning-bg)' }}>
             <Users size={20} style={{ color: 'var(--warning)' }} />
@@ -93,7 +93,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       </div>
 
       {/* ====== QUICK START STEPS ====== */}
-      <div className="rounded-xl p-5 lg:p-6 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+      <div className="rounded-xl p-5 lg:p-6 border animate-fade-in" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', animationDelay: '260ms' }}>
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-bold font-[family-name:var(--font-display)]" style={{ color: 'var(--text)' }}>Quick Start</h2>
@@ -116,7 +116,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             <button
               key={i}
               onClick={() => onNavigate(step.page)}
-              className="flex items-center gap-3 p-3 rounded-lg border transition-all hover:shadow-sm text-left min-h-[48px]"
+              className="flex items-center gap-3 p-3 rounded-lg border transition-all hover:shadow-sm hover:-translate-y-0.5 text-left min-h-[48px]"
               style={{ borderColor: 'var(--border)' }}
             >
               <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: step.colorBg }}>
@@ -132,7 +132,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       </div>
 
       {/* ====== DISCOVERY SECTIONS ====== */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in" style={{ animationDelay: '320ms' }}>
         {/* Popular This Week */}
         <div className="rounded-xl p-5 lg:p-6 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
           <div className="flex items-center justify-between mb-4">
@@ -228,7 +228,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
       </div>
 
       {/* ====== STUDENT-MADE HIGHLIGHTS ====== */}
-      <div className="rounded-xl p-5 lg:p-6 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+      <div className="rounded-xl p-5 lg:p-6 border animate-fade-in" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', animationDelay: '380ms' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold flex items-center gap-2" style={{ color: 'var(--text)' }}>
             <Trophy size={18} style={{ color: 'var(--warning)' }} />

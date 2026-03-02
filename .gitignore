@@ -1,0 +1,19 @@
+# Build output (keep docs/ committed for GitHub Pages)
+dist/
+
+# Vite cache
+node_modules/.vite/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.log
+
+# Env
+.env
+.env.local
+.env.*.local
+

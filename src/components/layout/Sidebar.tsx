@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
     Home, LayoutDashboard, Calendar, BookOpen, Users,
-    FolderOpen, Palette, Rocket, ChevronLeft, ChevronRight, X
+    FolderOpen, Palette, Rocket, ChevronLeft, ChevronRight, X, GraduationCap
 } from 'lucide-react';
 import { useLocalStore } from '@/store/useLocalStore';
 
@@ -18,6 +18,7 @@ interface SidebarProps {
 const navItems = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'lessons', label: 'Lessons', icon: GraduationCap },
     { id: 'schedule', label: 'Schedule', icon: Calendar },
     { id: 'resources', label: 'Resources', icon: BookOpen },
     { id: 'community', label: 'Community', icon: Users },
@@ -110,7 +111,7 @@ export default function Sidebar({
                 </div>
 
                 <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto" aria-label="Main navigation">
-                    {navItems.map(item => {
+                    {navItems.map((item, idx) => {
                         const Icon = item.icon;
                         const active = currentPage === item.id;
                         return (
@@ -119,8 +120,9 @@ export default function Sidebar({
                                 onClick={() => handleNav(item.id)}
                                 aria-current={active ? 'page' : undefined}
                                 title={!sidebarExpanded ? item.label : undefined}
-                                className="w-full flex items-center gap-3 rounded-lg text-sm font-medium transition-all duration-150 min-h-[44px]"
+                                className="w-full flex items-center gap-3 rounded-lg text-sm font-medium transition-all duration-200 min-h-[44px] animate-fade-in"
                                 style={{
+                                    animationDelay: `${idx * 40}ms`,
                                     padding: sidebarExpanded ? '8px 12px' : '8px',
                                     justifyContent: sidebarExpanded ? 'flex-start' : 'center',
                                     backgroundColor: active ? 'var(--brand)' : 'transparent',

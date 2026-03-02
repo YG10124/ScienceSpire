@@ -1,14 +1,16 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Search, Filter, X, Play, FileText, Zap, Layers,
   Clock, Star, User, ChevronRight, Heart,
   Share2, Bookmark, Grid, List, CheckCircle2
 } from 'lucide-react';
 import { useLocalStore } from '@/store/useLocalStore';
+import type { BreadcrumbItem } from '@/config/site';
 
 interface ResourcesPageProps {
   searchQuery?: string;
   onSearchChange?: (q: string) => void;
+  onBreadcrumbChange?: (items: BreadcrumbItem[]) => void;
 }
 
 type QuizQuestion = {
@@ -243,7 +245,7 @@ const resources: ResourceItem[] = [
   },
 ];
 
-export default function ResourcesPage({ searchQuery: searchProp = '', onSearchChange }: ResourcesPageProps) {
+export default function ResourcesPage({ searchQuery: searchProp = '', onSearchChange, onBreadcrumbChange }: ResourcesPageProps) {
   const { savedItems, likedItems, toggleSaved, toggleLiked, markReviewed, reviewedItems, addNotification } = useLocalStore();
   const [localSearch, setLocalSearch] = useState('');
   const searchQuery = onSearchChange !== undefined ? searchProp : localSearch;
@@ -257,6 +259,20 @@ export default function ResourcesPage({ searchQuery: searchProp = '', onSearchCh
 
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number[]>>({});
   const [quizSubmitted, setQuizSubmitted] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    if (!onBreadcrumbChange) return;
+    if (selectedResource === null) {
+      onBreadcrumbChange([]);
+      return;
+    }
+    const item = resources.find(resource => resource.id === selectedResource);
+    if (!item) {
+      onBreadcrumbChange([]);
+      return;
+    }
+    onBreadcrumbChange([{ label: item.subject }, { label: item.title }]);
+  }, [onBreadcrumbChange, selectedResource]);
 
   const showToast = (msg: string) => {
     setToastMsg(msg);

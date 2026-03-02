@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     MessageSquare, Hash, Users, HelpCircle,
     CheckCircle2, Clock, ChevronRight, Plus, ThumbsUp,
     ArrowLeft, Send, Award, TrendingUp
 } from 'lucide-react';
 import { useLocalStore } from '@/store/useLocalStore';
+import type { BreadcrumbItem } from '@/config/site';
 
-export default function CommunityPage() {
+interface CommunityPageProps {
+    onBreadcrumbChange?: (items: BreadcrumbItem[]) => void;
+}
+
+export default function CommunityPage({ onBreadcrumbChange }: CommunityPageProps) {
     const { likedItems, toggleLiked, addNotification } = useLocalStore();
     const [activeTab, setActiveTab] = useState<'channels' | 'questions' | 'groups'>('questions');
     const [selectedThread, setSelectedThread] = useState<number | null>(null);
@@ -17,6 +22,20 @@ export default function CommunityPage() {
         setToastMsg(msg);
         setTimeout(() => setToastMsg(null), 3000);
     };
+
+    useEffect(() => {
+        if (!onBreadcrumbChange) return;
+        if (selectedThread === null) {
+            onBreadcrumbChange([]);
+            return;
+        }
+        const thread = questions.find(q => q.id === selectedThread);
+        if (!thread) {
+            onBreadcrumbChange([]);
+            return;
+        }
+        onBreadcrumbChange([{ label: thread.subject }, { label: thread.title }]);
+    }, [onBreadcrumbChange, selectedThread]);
 
     const questions = [
         {
@@ -172,7 +191,7 @@ export default function CommunityPage() {
                     })}
                 </div>
 
-                <div className="p-4 lg:p-5">
+                <div key={activeTab} className="p-4 lg:p-5 animate-tab-enter">
                     {activeTab === 'questions' && (
                         <div className="space-y-3">
                             {questions.map(q => (

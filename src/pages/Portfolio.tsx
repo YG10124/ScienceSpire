@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FolderOpen, Plus, Clock, CheckCircle2, Star,
   ChevronRight, Link2, Upload, FileText, Image,
   ArrowLeft, Edit3, Share2, Lock, Globe,
   MessageSquare, Award,
 } from 'lucide-react';
+import type { BreadcrumbItem } from '@/config/site';
 
-export default function Portfolio() {
+interface PortfolioProps {
+  onBreadcrumbChange?: (items: BreadcrumbItem[]) => void;
+}
+
+export default function Portfolio({ onBreadcrumbChange }: PortfolioProps) {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
@@ -106,6 +111,20 @@ export default function Portfolio() {
     doc: FileText,
     image: Image,
   };
+
+  useEffect(() => {
+    if (!onBreadcrumbChange) return;
+    if (selectedProject === null) {
+      onBreadcrumbChange([]);
+      return;
+    }
+    const project = projects.find(p => p.id === selectedProject);
+    if (!project) {
+      onBreadcrumbChange([]);
+      return;
+    }
+    onBreadcrumbChange([{ label: project.subject }, { label: project.title }]);
+  }, [onBreadcrumbChange, selectedProject]);
 
   // Project detail view
   if (selectedProject !== null) {

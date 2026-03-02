@@ -32,12 +32,20 @@ export default function BottomNav({ currentPage, onNavigate }: BottomNavProps) {
                             key={item.id}
                             onClick={() => onNavigate(item.id)}
                             aria-current={active ? 'page' : undefined}
-                            className="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[48px] rounded-lg text-[11px] transition-all"
+                            className="relative flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[48px] rounded-xl text-[11px] transition-all duration-200"
                             style={{
                                 color: active ? 'var(--brand)' : 'var(--text-secondary)',
                                 fontWeight: active ? 600 : 400,
+                                backgroundColor: active ? 'var(--brand-bg)' : 'transparent',
                             }}
                         >
+                            {active && (
+                                <span
+                                    className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[3px] rounded-b-full animate-scale-in"
+                                    style={{ backgroundColor: 'var(--brand)' }}
+                                    aria-hidden="true"
+                                />
+                            )}
                             <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
                             <span>{item.label}</span>
                         </button>

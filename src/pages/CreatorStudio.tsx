@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Palette, Zap, BookOpen, FileText, StickyNote,
   ChevronRight, ArrowLeft, Eye, Globe, Tag,
   Clock, BarChart3, Info, Check
 } from 'lucide-react';
+import type { BreadcrumbItem } from '@/config/site';
 
-export default function CreatorStudio() {
+interface CreatorStudioProps {
+  onBreadcrumbChange?: (items: BreadcrumbItem[]) => void;
+}
+
+export default function CreatorStudio({ onBreadcrumbChange }: CreatorStudioProps) {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [step, setStep] = useState<'select' | 'edit' | 'meta' | 'preview'>('select');
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
@@ -52,6 +57,20 @@ export default function CreatorStudio() {
       example: 'Quick reference for exams',
     },
   ];
+
+  useEffect(() => {
+    if (!onBreadcrumbChange) return;
+    if (selectedTemplate === null) {
+      onBreadcrumbChange([]);
+      return;
+    }
+    const template = templates.find(t => t.id === selectedTemplate);
+    if (!template) {
+      onBreadcrumbChange([]);
+      return;
+    }
+    onBreadcrumbChange([{ label: template.title }, { label: step === 'select' ? 'Template' : step }]);
+  }, [onBreadcrumbChange, selectedTemplate, step]);
 
   if (step !== 'select') {
     const template = templates.find(t => t.id === selectedTemplate);

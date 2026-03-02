@@ -1,3 +1,10 @@
-// Re-export Portfolio with theme token wrapper
-// Portfolio already has rich functionality, this creates the proper import path
-export { default } from './Portfolio';
+import Portfolio from './Portfolio';
+import type { BreadcrumbItem } from '@/config/site';
+
+interface PortfolioPageProps {
+  onBreadcrumbChange?: (items: BreadcrumbItem[]) => void;
+}
+
+export default function PortfolioPage({ onBreadcrumbChange }: PortfolioPageProps) {
+  return <Portfolio onBreadcrumbChange={onBreadcrumbChange} />;
+}
