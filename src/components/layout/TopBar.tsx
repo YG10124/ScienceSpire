@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
-import { Search, Bell, Menu, Sun, Moon } from 'lucide-react';
+import { Search, Bell, Menu, Sun, Moon, BookOpen } from 'lucide-react';
 import { useTheme } from '@/store/useThemeStore';
 import { useLocalStore } from '@/store/useLocalStore';
-import { BookOpen } from 'lucide-react';
+import LevelChip from '@/components/gamification/LevelChip';
 
 const SEARCH_INDEX = [
     { label: 'Quantum Physics Basics', page: 'resources', query: 'quantum physics', kind: 'Resource' },
@@ -155,15 +155,18 @@ export default function TopBar({ currentPage, onNavigate, onOpenSidebar, isSigne
                     </button>
                     )}
                     {isSignedIn && (
-                        <button
-                            onClick={() => onNavigate('profile')}
-                            className="flex items-center gap-2 ml-1 p-1.5 rounded-lg transition-colors"
-                            aria-label={`Open profile for ${displayName}`}
-                        >
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1D4ED8] to-[#3B82F6] flex items-center justify-center text-white text-xs font-bold">
-                                {avatarInitials}
-                            </div>
-                        </button>
+                        <div className="flex items-center gap-2 ml-1">
+                            <LevelChip compact />
+                            <button
+                                onClick={() => onNavigate('profile')}
+                                className="flex items-center gap-2 p-1.5 rounded-lg transition-colors"
+                                aria-label={`Open profile for ${displayName}`}
+                            >
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1D4ED8] to-[#3B82F6] flex items-center justify-center text-white text-xs font-bold">
+                                    {avatarInitials}
+                                </div>
+                            </button>
+                        </div>
                     )}
                     {!isSignedIn && (
                         <>

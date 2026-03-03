@@ -1,22 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   User, Mail, BookOpen, Calendar, Trophy,
   Flame, Target, Edit3, Shield, Bell,
-  Globe, Moon, Sun, LogOut, CheckCircle2
+  Globe, Moon, Sun, LogOut, CheckCircle2,
+  Star, Play, Zap, Bookmark, MessageSquare, Palette,
+  Award, GraduationCap, Rocket, Crown, Layers,
 } from 'lucide-react';
 import { useTheme } from '@/store/useThemeStore';
 import { useLocalStore } from '@/store/useLocalStore';
+import { useGamification } from '@/store/useGamificationStore';
+import { ALL_BADGES } from '@/store/gamificationModule';
 
 interface ProfileProps {
   onNavigate: (page: string) => void;
   onSignOut: () => void;
 }
 
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
+  Star, Play, Zap, Bookmark, BookOpen, MessageSquare, Palette,
+  Flame, Trophy, Award, GraduationCap, Rocket, Crown, Layers, Calendar,
+};
+
+const RARITY_COLORS: Record<string, string> = {
+  common: 'var(--text-secondary)',
+  rare: '#1D4ED8',
+  epic: '#7C3AED',
+  legendary: '#D97706',
+};
+
 export default function Profile({ onNavigate, onSignOut }: ProfileProps) {
   const { themeMode, toggleTheme } = useTheme();
   const { currentUser, streak, addNotification } = useLocalStore();
+  const { earnedBadgeIds } = useGamification();
   const [toastMsg, setToastMsg] = useState<string | null>(null);
-  const [focusMinutes, setFocusMinutes] = useState(0);
+  const [focusSecondsLeft, setFocusSecondsLeft] = useState(0);
   const [focusActive, setFocusActive] = useState(false);
 
   const showToast = (msg: string) => {
@@ -24,13 +41,35 @@ export default function Profile({ onNavigate, onSignOut }: ProfileProps) {
     setTimeout(() => setToastMsg(null), 3000);
   };
 
-  // Simple focus timer
+  // Countdown interval — runs only while focusActive is true
+  useEffect(() => {
+    if (!focusActive) return;
+    const id = setInterval(() => {
+      setFocusSecondsLeft(prev => {
+        if (prev <= 1) {
+          setFocusActive(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [focusActive]);
+
   const startFocusTimer = () => {
+    setFocusSecondsLeft(25 * 60);
     setFocusActive(true);
-    setFocusMinutes(25);
-    showToast('⏱️ Focus timer started — 25 minutes!');
+    showToast('Focus timer started — 25 minutes!');
     addNotification('Focus timer started (25 min)');
   };
+
+  const focusMins = Math.floor(focusSecondsLeft / 60);
+  const focusSecs = focusSecondsLeft % 60;
+  const focusDisplay = `${String(focusMins).padStart(2, '0')}:${String(focusSecs).padStart(2, '0')}`;
+
+  const earnedBadges = earnedBadgeIds
+    .map(id => ALL_BADGES.find(b => b.id === id))
+    .filter(Boolean);
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -80,9 +119,22 @@ export default function Profile({ onNavigate, onSignOut }: ProfileProps) {
         </h2>
         {focusActive ? (
           <div className="text-center py-4">
-            <div className="text-3xl font-bold font-[family-name:var(--font-display)]" style={{ color: 'var(--brand)' }}>{focusMinutes}:00</div>
-            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Stay focused! Timer is running.</p>
-            <button onClick={() => { setFocusActive(false); showToast('⏹️ Timer stopped.'); }} className="mt-3 px-4 py-2 rounded-xl text-sm font-medium border min-h-[44px]" style={{ borderColor: 'var(--border)', color: 'var(--text)' }}>Stop Timer</button>
+            <div
+              className="text-4xl font-bold font-[family-name:var(--font-display)] tabular-nums"
+              style={{ color: 'var(--brand)' }}
+              aria-live="polite"
+              aria-label={`${focusMins} minutes ${focusSecs} seconds remaining`}
+            >
+              {focusDisplay}
+            </div>
+            <p className="text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>Stay focused! Timer is running.</p>
+            <button
+              onClick={() => { setFocusActive(false); setFocusSecondsLeft(0); showToast('Timer stopped.'); }}
+              className="mt-3 px-4 py-2 rounded-xl text-sm font-medium border min-h-[44px]"
+              style={{ borderColor: 'var(--border)', color: 'var(--text)' }}
+            >
+              Stop Timer
+            </button>
           </div>
         ) : (
           <button onClick={startFocusTimer} className="w-full px-4 py-3 rounded-xl text-sm font-semibold min-h-[48px]" style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}>
@@ -95,23 +147,42 @@ export default function Profile({ onNavigate, onSignOut }: ProfileProps) {
       <div className="rounded-xl p-5 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
         <h2 className="text-base font-bold flex items-center gap-2 mb-4" style={{ color: 'var(--text)' }}>
           <Trophy size={18} style={{ color: 'var(--warning)' }} /> Badges Earned
+          <span className="ml-1 text-sm font-normal" style={{ color: 'var(--text-secondary)' }}>
+            ({earnedBadges.length}/{ALL_BADGES.length})
+          </span>
         </h2>
-        <div className="flex flex-wrap gap-3">
-          {[
-            { name: 'Quick Starter', emoji: '🚀', desc: 'Completed onboarding' },
-            { name: '7-Day Streak', emoji: '🔥', desc: 'Studied 7 days in a row' },
-            { name: 'Team Player', emoji: '🤝', desc: 'Joined 5 study groups' },
-            { name: 'Creator', emoji: '✨', desc: 'Published a resource' },
-          ].map((badge, i) => (
-            <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-              <span className="text-lg">{badge.emoji}</span>
-              <div>
-                <div className="text-xs font-semibold" style={{ color: 'var(--text)' }}>{badge.name}</div>
-                <div className="text-[10px]" style={{ color: 'var(--text-secondary)' }}>{badge.desc}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {earnedBadges.length === 0 ? (
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            No badges yet — join sessions, complete quizzes, and engage with the community to earn them!
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-3">
+            {earnedBadges.map(badge => {
+              if (!badge) return null;
+              const IconComp = ICON_MAP[badge.icon] ?? Award;
+              const iconColor = RARITY_COLORS[badge.rarity] ?? 'var(--text-secondary)';
+              return (
+                <div
+                  key={badge.id}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl border"
+                  style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border-light)' }}
+                  title={badge.condition}
+                >
+                  <div
+                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: `${iconColor}18`, color: iconColor }}
+                  >
+                    <IconComp size={14} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold" style={{ color: 'var(--text)' }}>{badge.name}</div>
+                    <div className="text-[10px] capitalize" style={{ color: iconColor }}>{badge.rarity}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Goals */}

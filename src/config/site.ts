@@ -12,7 +12,8 @@ export type AppPage =
   | 'portfolio'
   | 'creator'
   | 'onboarding'
-  | 'profile';
+  | 'profile'
+  | 'leaderboard';
 
 export interface BreadcrumbItem {
   label: string;
@@ -97,5 +98,10 @@ export const PAGE_META: Record<AppPage, PageMeta> = {
     title: 'Profile & Settings | ScienceSpire',
     description: 'Manage your profile, preferences, and study settings.',
     breadcrumbs: [{ label: 'Home', page: 'home' }, { label: 'Profile' }],
+  },
+  leaderboard: {
+    title: 'Leaderboard | ScienceSpire',
+    description: 'See how your XP and level rank among other science students.',
+    breadcrumbs: [{ label: 'Home', page: 'home' }, { label: 'Leaderboard' }],
   },
 };

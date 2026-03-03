@@ -5,6 +5,7 @@ import {
   Share2, Bookmark, Grid, List, CheckCircle2
 } from 'lucide-react';
 import { useLocalStore } from '@/store/useLocalStore';
+import { awardXP } from '@/store/gamificationModule';
 import type { BreadcrumbItem } from '@/config/site';
 
 interface ResourcesPageProps {
@@ -295,6 +296,9 @@ export default function ResourcesPage({ searchQuery: searchProp = '', onSearchCh
     if (answers.length < total) {
       showToast('Answer all questions before submitting.');
       return;
+    }
+    if (!quizSubmitted[res.id]) {
+      awardXP('quiz_complete', 50);
     }
     setQuizSubmitted(prev => ({ ...prev, [res.id]: true }));
     const score = res.quiz.reduce((acc, q, i) => acc + (answers[i] === q.correctIndex ? 1 : 0), 0);

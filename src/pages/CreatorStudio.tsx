@@ -4,6 +4,7 @@ import {
   ChevronRight, ArrowLeft, Eye, Globe, Tag,
   Clock, BarChart3, Info, Check, X, Plus, Trash2,
 } from 'lucide-react';
+import { awardXP } from '@/store/gamificationModule';
 import type { BreadcrumbItem } from '@/config/site';
 
 interface QuizQuestion {
@@ -240,6 +241,7 @@ export default function CreatorStudio({ onBreadcrumbChange }: CreatorStudioProps
   };
 
   const handlePublish = () => {
+    awardXP('content_created', 75);
     const template = templates.find(t => t.id === selectedTemplate)!;
     const now = 'just now';
     const newCreation: Creation = {

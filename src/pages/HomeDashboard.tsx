@@ -3,6 +3,7 @@ import {
   Clock, TrendingUp, ChevronRight, Sparkles, Zap, Trophy
 } from 'lucide-react';
 import { useLocalStore } from '@/store/useLocalStore';
+import GamificationCard from '@/components/gamification/GamificationCard';
 
 interface HomeDashboardProps {
   onNavigate: (page: string) => void;
@@ -43,6 +44,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           </div>
         </div>
       </div>
+
+      {/* ====== GAMIFICATION CARD ====== */}
+      <GamificationCard onNavigate={onNavigate} />
 
       {/* ====== QUICK ACTION TILES ====== */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4">
