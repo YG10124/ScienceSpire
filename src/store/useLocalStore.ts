@@ -235,7 +235,7 @@ function createInitialState(): LocalStore {
     return {
         accounts: saved.accounts ?? [],
         currentUser: saved.currentUser ?? guestUser,
-        isSignedIn: saved.isSignedIn ?? false,
+        isSignedIn: false, // always start unsigned-in; sign-in is per-session
         progress: saved.progress ?? [],
         sessions: scienceSessions, // always use fresh science sessions
         savedItems: saved.savedItems ?? [],

@@ -9,8 +9,8 @@ const __dirname = path.dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Relative base so asset paths work from any GitHub Pages subdirectory.
-  base: "./",
+  // Absolute base matching the GitHub Pages URL path.
+  base: "/ScienceSpire/",
   plugins: [react(), tailwindcss()],
   build: {
     // Output directly to docs/ — GitHub Pages serves this folder from the branch.
