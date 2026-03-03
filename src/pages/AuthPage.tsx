@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlaskConical, Atom, Eye, EyeOff, ArrowRight, Globe, Dna } from 'lucide-react';
+import { FlaskConical, Atom, Beaker, Eye, EyeOff, ArrowRight, Globe, Dna } from 'lucide-react';
 import { useLocalStore, type ScienceSubject } from '../store/useLocalStore';
 
 interface AuthPageProps {
@@ -68,33 +68,30 @@ export default function AuthPage({ onAuthSuccess, onGoHome, initialTab = 'signin
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style={{ backgroundColor: 'var(--bg)' }}>
-            {/* Radial glow */}
-            <div className="absolute inset-0 pointer-events-none"
-                style={{
-                    background: 'radial-gradient(ellipse 60% 50% at 50% 40%, var(--brand-bg), transparent)',
-                }}
-            />
-
-            <div className="relative z-10 w-full max-w-md animate-scale-in">
+        <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--bg)' }}>
+            <div className="w-full max-w-md animate-scale-in">
                 {/* Logo - clickable to go home */}
                 <div className="text-center mb-8">
                     <button
                         type="button"
                         onClick={onGoHome}
-                        className="inline-block text-center focus:outline-none rounded-xl transition-opacity hover:opacity-90"
+                        className="inline-flex flex-col items-center gap-2 focus:outline-none rounded-xl transition-opacity hover:opacity-90"
                         aria-label="Back to homepage"
                     >
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 shadow-xl"
-                            style={{ background: 'linear-gradient(135deg, var(--brand), var(--info))' }}>
-                            <Atom size={32} className="text-white" />
+                        <div
+                            className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg"
+                            style={{ backgroundColor: 'var(--brand)' }}
+                        >
+                            <Beaker size={24} className="text-white" />
                         </div>
-                        <h1 className="text-3xl font-bold font-[family-name:var(--font-display)]" style={{ color: 'var(--text)' }}>
-                            ScienceSpire
-                        </h1>
-                        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-                            Student-driven science learning
-                        </p>
+                        <div>
+                            <h1 className="text-2xl font-bold font-[family-name:var(--font-display)]" style={{ color: 'var(--text)' }}>
+                                ScienceSpire
+                            </h1>
+                            <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                                Student science hub
+                            </p>
+                        </div>
                     </button>
                 </div>
 
@@ -208,10 +205,12 @@ export default function AuthPage({ onAuthSuccess, onGoHome, initialTab = 'signin
 }
 
 function Field({ label, type, value, onChange, placeholder }: { label: string; type: string; value: string; onChange: (v: string) => void; placeholder: string }) {
+    const id = label.toLowerCase().replace(/\s+/g, '-');
     return (
         <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
+            <label htmlFor={id} className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
             <input
+                id={id}
                 type={type}
                 value={value}
                 onChange={e => onChange(e.target.value)}
@@ -230,11 +229,13 @@ function Field({ label, type, value, onChange, placeholder }: { label: string; t
 }
 
 function PasswordField({ label, value, onChange, show, onToggle }: { label: string; value: string; onChange: (v: string) => void; show: boolean; onToggle: () => void }) {
+    const id = label.toLowerCase().replace(/\s+/g, '-');
     return (
         <div>
-            <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
+            <label htmlFor={id} className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-secondary)' }}>{label}</label>
             <div className="relative">
                 <input
+                    id={id}
                     type={show ? 'text' : 'password'}
                     value={value}
                     onChange={e => onChange(e.target.value)}
@@ -243,9 +244,13 @@ function PasswordField({ label, value, onChange, show, onToggle }: { label: stri
                     className="w-full px-3 py-2.5 pr-10 rounded-xl text-sm border transition-colors focus:outline-none"
                     style={{ backgroundColor: 'var(--card-alt)', borderColor: 'var(--border)', color: 'var(--text)' }}
                 />
-                <button type="button" onClick={onToggle}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                    style={{ color: 'var(--text-muted)' }}>
+                <button
+                    type="button"
+                    onClick={onToggle}
+                    aria-label={show ? 'Hide password' : 'Show password'}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 min-w-[32px] min-h-[32px] flex items-center justify-center"
+                    style={{ color: 'var(--text-muted)' }}
+                >
                     {show ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
             </div>

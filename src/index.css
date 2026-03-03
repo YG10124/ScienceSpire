@@ -314,6 +314,26 @@ html {
   animation: tabEnter 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ====== Science stars twinkle ====== */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scale(1.6);
+    box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.45);
+  }
+}
+
+.star-twinkle {
+  animation: twinkle var(--twinkle-dur, 3s) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0s);
+}
+
 @keyframes float {
 
   0%,
