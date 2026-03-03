@@ -11,11 +11,20 @@ interface PortfolioProps {
   onBreadcrumbChange?: (items: BreadcrumbItem[]) => void;
 }
 
+interface NewProjectForm {
+  title: string;
+  subject: string;
+  description: string;
+}
+
 export default function Portfolio({ onBreadcrumbChange }: PortfolioProps) {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [showNewProject, setShowNewProject] = useState(false);
+  const [newForm, setNewForm] = useState<NewProjectForm>({ title: '', subject: 'Physics', description: '' });
+  const [userProjects, setUserProjects] = useState<typeof baseProjects>([]);
 
-  const projects = [
+  const baseProjects = [
     {
       id: 1,
       title: 'Kinematics Lab Report',
@@ -106,10 +115,36 @@ export default function Portfolio({ onBreadcrumbChange }: PortfolioProps) {
     },
   ];
 
+  const projects = [...baseProjects, ...userProjects];
+
   const artifactIcons: Record<string, typeof FileText> = {
     pdf: FileText,
     doc: FileText,
     image: Image,
+  };
+
+  const handleCreateProject = () => {
+    if (!newForm.title.trim()) return;
+    const newProject = {
+      id: Date.now(),
+      title: newForm.title.trim(),
+      description: newForm.description.trim() || 'New science project.',
+      subject: newForm.subject,
+      status: 'In Progress',
+      statusColor: '#D97706',
+      statusIcon: Clock,
+      lastUpdated: 'just now',
+      goals: [],
+      artifacts: [] as { name: string; type: string; size: string }[],
+      reflection: '',
+      feedback: [] as { author: string; text: string; time: string }[],
+      privacy: 'private' as const,
+      completionPct: 0,
+    };
+    setUserProjects(prev => [...prev, newProject]);
+    setNewForm({ title: '', subject: 'Physics', description: '' });
+    setShowNewProject(false);
+    setSelectedProject(newProject.id);
   };
 
   useEffect(() => {
@@ -272,10 +307,62 @@ export default function Portfolio({ onBreadcrumbChange }: PortfolioProps) {
           <h1 className="text-xl lg:text-2xl font-bold text-[#111827]">Portfolio</h1>
           <p className="text-sm text-[#4B5563] mt-0.5">Collect your work and showcase your learning</p>
         </div>
-        <button className="inline-flex items-center gap-2 bg-[#1D4ED8] text-white font-semibold px-5 py-3 rounded-xl text-sm hover:bg-[#1E40AF] transition-colors min-h-[48px] shadow-sm">
+        <button
+          onClick={() => setShowNewProject(true)}
+          className="inline-flex items-center gap-2 bg-[#1D4ED8] text-white font-semibold px-5 py-3 rounded-xl text-sm hover:bg-[#1E40AF] transition-colors min-h-[48px] shadow-sm"
+        >
           <Plus size={16} /> New Project
         </button>
       </div>
+
+      {/* New Project inline form */}
+      {showNewProject && (
+        <div className="rounded-xl border-2 p-5 space-y-4 animate-fade-in" style={{ borderColor: 'var(--brand)', backgroundColor: 'var(--card)' }}>
+          <h3 className="text-sm font-bold" style={{ color: 'var(--text)' }}>New Project</h3>
+          <div className="space-y-3">
+            <input
+              type="text"
+              placeholder="Project title"
+              value={newForm.title}
+              onChange={e => setNewForm(f => ({ ...f, title: e.target.value }))}
+              autoFocus
+              className="w-full px-3 py-2.5 rounded-xl text-sm border focus:outline-none focus:ring-2 min-h-[44px]"
+              style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)', '--tw-ring-color': 'var(--brand)' } as React.CSSProperties}
+            />
+            <select
+              value={newForm.subject}
+              onChange={e => setNewForm(f => ({ ...f, subject: e.target.value }))}
+              className="w-full px-3 py-2.5 rounded-xl text-sm border focus:outline-none min-h-[44px]"
+              style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
+            >
+              {['Physics', 'Chemistry', 'Biology', 'Earth Science'].map(s => <option key={s}>{s}</option>)}
+            </select>
+            <textarea
+              placeholder="Short description (optional)"
+              value={newForm.description}
+              onChange={e => setNewForm(f => ({ ...f, description: e.target.value }))}
+              rows={2}
+              className="w-full px-3 py-2.5 rounded-xl text-sm border focus:outline-none resize-none"
+              style={{ backgroundColor: 'var(--bg)', borderColor: 'var(--border)', color: 'var(--text)' }}
+            />
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={handleCreateProject}
+              disabled={!newForm.title.trim()}
+              className="inline-flex items-center gap-2 font-semibold px-4 py-2.5 rounded-xl text-sm min-h-[44px] disabled:opacity-40"
+              style={{ backgroundColor: 'var(--brand)', color: '#fff' }}
+            >
+              <Plus size={15} /> Create Project
+            </button>
+            <button
+              onClick={() => { setShowNewProject(false); setNewForm({ title: '', subject: 'Physics', description: '' }); }}
+              className="px-4 py-2.5 rounded-xl text-sm min-h-[44px]"
+              style={{ backgroundColor: 'var(--card-alt)', color: 'var(--text-secondary)' }}
+            >Cancel</button>
+          </div>
+        </div>
+      )}
 
       {/* View toggle */}
       <div className="flex items-center gap-2">
@@ -381,7 +468,10 @@ export default function Portfolio({ onBreadcrumbChange }: PortfolioProps) {
         })}
 
         {/* Add new project card */}
-        <button className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center hover:border-[#1D4ED8] hover:bg-[#1D4ED8]/5 transition-all text-center min-h-[200px]">
+        <button
+          onClick={() => { setShowNewProject(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center hover:border-[#1D4ED8] hover:bg-[#1D4ED8]/5 transition-all text-center min-h-[200px]"
+        >
           <Plus size={24} className="text-[#4B5563] mb-2" />
           <span className="text-sm font-medium text-[#4B5563]">New Project</span>
         </button>
