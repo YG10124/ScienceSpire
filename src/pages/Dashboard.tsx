@@ -101,23 +101,32 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <span className="text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1" style={{ backgroundColor: 'var(--success-bg)', color: 'var(--success)' }}><ArrowUpRight size={12} /> +12% vs last week</span>
           </div>
 
-          <div className="flex items-end justify-between gap-2 h-32 mb-3">
-            {weekDays.map((day, i) => (
-              <div key={day} className="flex-1 flex flex-col items-center gap-1">
-                <span className="text-[10px] font-medium" style={{ color: 'var(--text-secondary)' }}>{weekActivity[i]}m</span>
-                <div className="w-full rounded-t-md relative" style={{ height: '100%', backgroundColor: 'var(--bg)' }}>
+          <div className="flex items-end gap-2 h-32 mb-3">
+            {weekDays.map((day, i) => {
+              const fraction = maxActivity > 0 ? weekActivity[i] / maxActivity : 0;
+              // Reserve ~28px for the day label + gap; bars grow into the remaining ~76px
+              const barPx = Math.round(fraction * 76);
+              return (
+                <div key={day} className="flex-1 flex flex-col items-center gap-1">
+                  <span
+                    className="text-[10px] font-medium"
+                    style={{ color: 'var(--text-secondary)', visibility: weekActivity[i] > 0 ? 'visible' : 'hidden' }}
+                  >
+                    {weekActivity[i]}m
+                  </span>
                   <div
-                    className="absolute bottom-0 left-0 right-0 rounded-t-md transition-all duration-700"
+                    className="w-full rounded-t-sm transition-all duration-700"
                     style={{
-                      height: `${animateActivity && maxActivity > 0 ? (weekActivity[i] / maxActivity) * 100 : 0}%`,
+                      height: animateActivity ? `${barPx}px` : '0px',
                       backgroundColor: i === 6 ? 'var(--border)' : 'var(--brand)',
-                      opacity: i === 6 ? 0.5 : (0.5 + (weekActivity[i] / maxActivity) * 0.5),
+                      opacity: i === 6 ? 0.4 : (0.4 + fraction * 0.6),
+                      minHeight: weekActivity[i] > 0 && animateActivity ? '2px' : undefined,
                     }}
                   />
+                  <span className="text-[10px]" style={{ color: 'var(--text-secondary)' }}>{day}</span>
                 </div>
-                <span className="text-[10px]" style={{ color: 'var(--text-secondary)' }}>{day}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-4 pt-3 border-t text-sm" style={{ borderColor: 'var(--border)' }}>

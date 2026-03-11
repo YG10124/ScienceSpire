@@ -3,6 +3,7 @@ import {
   Clock, TrendingUp, ChevronRight, Sparkles, Zap, Trophy
 } from 'lucide-react';
 import { useLocalStore } from '@/store/useLocalStore';
+import GamificationCard from '@/components/gamification/GamificationCard';
 
 interface HomeDashboardProps {
   onNavigate: (page: string) => void;
@@ -28,7 +29,7 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
             <button
               onClick={() => onNavigate('schedule')}
               className="inline-flex items-center gap-2 font-semibold px-5 py-3 rounded-xl text-sm transition-colors min-h-[48px] shadow-sm"
-              style={{ backgroundColor: '#FFFFFF', color: 'var(--brand)' }}
+              style={{ backgroundcolor: 'var(--brand-text)', color: 'var(--brand)' }}
             >
               <Play size={18} />
               Start learning now
@@ -43,6 +44,9 @@ export default function HomeDashboard({ onNavigate }: HomeDashboardProps) {
           </div>
         </div>
       </div>
+
+      {/* ====== GAMIFICATION CARD ====== */}
+      <GamificationCard onNavigate={onNavigate} />
 
       {/* ====== QUICK ACTION TILES ====== */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4">

@@ -264,7 +264,7 @@ function SubmitBtn({ loading, label }: { loading: boolean; label: string }) {
             type="submit"
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all duration-200 min-h-[48px] mt-2 shadow-lg hover:shadow-xl disabled:opacity-60"
-            style={{ backgroundColor: 'var(--brand)', color: '#fff' }}
+            style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
         >
             {loading ? (
                 <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">

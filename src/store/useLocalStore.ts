@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { createElement } from 'react';
+import { awardXP } from './gamificationModule';
 
 /* ========== Types ========== */
 export type ScienceSubject = 'Physics' | 'Chemistry' | 'Biology' | 'Earth Science';
@@ -366,12 +367,14 @@ export function LocalStoreProvider({ children }: { children: ReactNode }) {
     }, [persist]);
 
     const toggleSaved = useCallback((id: string) => {
-        persist(s => ({
-            ...s,
-            savedItems: s.savedItems.includes(id)
-                ? s.savedItems.filter(x => x !== id)
-                : [...s.savedItems, id],
-        }));
+        persist(s => {
+            const isSaved = s.savedItems.includes(id);
+            if (!isSaved) awardXP('save_resource', 5);
+            return {
+                ...s,
+                savedItems: isSaved ? s.savedItems.filter(x => x !== id) : [...s.savedItems, id],
+            };
+        });
     }, [persist]);
 
     const toggleLiked = useCallback((id: string) => {
@@ -384,21 +387,27 @@ export function LocalStoreProvider({ children }: { children: ReactNode }) {
     }, [persist]);
 
     const markReviewed = useCallback((id: string) => {
-        persist(s => ({
-            ...s,
-            reviewedItems: s.reviewedItems.includes(id) ? s.reviewedItems : [...s.reviewedItems, id],
-        }));
+        persist(s => {
+            if (s.reviewedItems.includes(id)) return s;
+            awardXP('mark_reviewed', 20);
+            return { ...s, reviewedItems: [...s.reviewedItems, id] };
+        });
     }, [persist]);
 
     const reserveSession = useCallback((sessionId: number) => {
-        persist(s => ({
-            ...s,
-            sessions: s.sessions.map(sess =>
-                sess.id === sessionId && !sess.attendees.includes(s.currentUser.id) && sess.attendees.length < sess.capacity
-                    ? { ...sess, attendees: [...sess.attendees, s.currentUser.id] }
-                    : sess
-            ),
-        }));
+        persist(s => {
+            const sess = s.sessions.find(t => t.id === sessionId);
+            const canJoin = !!sess && !sess.attendees.includes(s.currentUser.id) && sess.attendees.length < sess.capacity;
+            if (canJoin && sess) awardXP('join_session', 30, { subject: sess.subject });
+            return {
+                ...s,
+                sessions: s.sessions.map(t =>
+                    t.id === sessionId && !t.attendees.includes(s.currentUser.id) && t.attendees.length < t.capacity
+                        ? { ...t, attendees: [...t.attendees, s.currentUser.id] }
+                        : t
+                ),
+            };
+        });
     }, [persist]);
 
     const leaveSession = useCallback((sessionId: number) => {
@@ -456,19 +465,22 @@ export function LocalStoreProvider({ children }: { children: ReactNode }) {
     }, [persist]);
 
     const addPost = useCallback((channelId: string, content: string) => {
-        persist(s => ({
-            ...s,
-            communityPosts: [...s.communityPosts, {
-                id: `p${Date.now()}`,
-                channelId,
-                authorId: s.currentUser.id,
-                authorName: s.currentUser.displayName,
-                content,
-                timestamp: new Date().toISOString(),
-                likes: 0,
-                likedBy: [],
-            }],
-        }));
+        persist(s => {
+            awardXP('community_post', 15);
+            return {
+                ...s,
+                communityPosts: [...s.communityPosts, {
+                    id: `p${Date.now()}`,
+                    channelId,
+                    authorId: s.currentUser.id,
+                    authorName: s.currentUser.displayName,
+                    content,
+                    timestamp: new Date().toISOString(),
+                    likes: 0,
+                    likedBy: [],
+                }],
+            };
+        });
     }, [persist]);
 
     const togglePostLike = useCallback((postId: string) => {

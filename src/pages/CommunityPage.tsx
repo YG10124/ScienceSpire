@@ -270,7 +270,7 @@ export default function CommunityPage({ onBreadcrumbChange }: CommunityPageProps
                             <div key={i} className="flex items-start gap-3">
                                 <div
                                     className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
-                                    style={{ backgroundColor: msg.isOwn ? 'var(--brand)' : 'var(--brand-bg)', color: msg.isOwn ? '#fff' : 'var(--brand)' }}
+                                    style={{ backgroundColor: msg.isOwn ? 'var(--brand)' : 'var(--brand-bg)', color: msg.isOwn ? 'var(--brand-text)' : 'var(--brand)' }}
                                 >
                                     {msg.initials}
                                 </div>
@@ -301,7 +301,7 @@ export default function CommunityPage({ onBreadcrumbChange }: CommunityPageProps
                             <button
                                 onClick={sendChannelMessage}
                                 className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                                style={{ backgroundColor: 'var(--brand)', color: '#fff' }}
+                                style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                                 aria-label="Send message"
                             >
                                 <Send size={16} />
@@ -386,7 +386,7 @@ export default function CommunityPage({ onBreadcrumbChange }: CommunityPageProps
                 {/* Reply input */}
                 <div className="rounded-xl p-4 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
                     <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5" style={{ backgroundColor: 'var(--brand)', color: '#fff' }}>{userInitials}</div>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5" style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}>{userInitials}</div>
                         <div className="flex-1">
                             <textarea
                                 value={replyText}
@@ -399,7 +399,7 @@ export default function CommunityPage({ onBreadcrumbChange }: CommunityPageProps
                                 onClick={postReply}
                                 disabled={!replyText.trim()}
                                 className="mt-2 inline-flex items-center gap-2 font-semibold px-4 py-2.5 rounded-xl text-sm min-h-[44px] disabled:opacity-40"
-                                style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+                                style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                             >
                                 <Send size={14} /> Post reply
                             </button>
@@ -477,7 +477,7 @@ export default function CommunityPage({ onBreadcrumbChange }: CommunityPageProps
                                 <button
                                     onClick={() => setShowAskForm(v => !v)}
                                     className="inline-flex items-center gap-2 font-semibold px-4 py-2 rounded-xl text-sm min-h-[40px]"
-                                    style={{ backgroundColor: 'var(--brand)', color: '#fff' }}
+                                    style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                                 >
                                     <Plus size={15} /> Ask a question
                                 </button>
@@ -507,7 +507,7 @@ export default function CommunityPage({ onBreadcrumbChange }: CommunityPageProps
                                             onClick={submitQuestion}
                                             disabled={!askTitle.trim()}
                                             className="px-4 py-2 rounded-xl text-sm font-semibold min-h-[40px] disabled:opacity-40"
-                                            style={{ backgroundColor: 'var(--brand)', color: '#fff' }}
+                                            style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                                         >Post</button>
                                         <button
                                             onClick={() => setShowAskForm(false)}
@@ -568,7 +568,7 @@ export default function CommunityPage({ onBreadcrumbChange }: CommunityPageProps
                                         <button
                                             onClick={() => toggleGroup(group.name)}
                                             className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg min-h-[36px] transition-all shrink-0"
-                                            style={{ backgroundColor: joined ? 'var(--success-bg)' : 'var(--brand)', color: joined ? 'var(--success)' : '#fff' }}
+                                            style={{ backgroundColor: joined ? 'var(--success-bg)' : 'var(--brand)', color: joined ? 'var(--success)' : 'var(--brand-text)' }}
                                         >
                                             {joined ? <><UserCheck size={13} /> Joined</> : <><UserPlus size={13} /> Join</>}
                                         </button>

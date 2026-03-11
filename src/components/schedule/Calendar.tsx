@@ -118,7 +118,7 @@ export default function Calendar({ selectedDate, onSelectDate }: CalendarProps) 
                                 className="h-9 rounded-lg text-sm font-medium transition-all flex items-center justify-center"
                                 style={{
                                     backgroundColor: isSelected ? 'var(--brand)' : 'transparent',
-                                    color: isSelected ? '#FFFFFF' : isToday ? 'var(--brand)' : 'var(--text)',
+                                    color: isSelected ? 'var(--brand-text)' : isToday ? 'var(--brand)' : 'var(--text)',
                                     fontWeight: isToday || isSelected ? 700 : 500,
                                     border: isToday && !isSelected ? '2px solid var(--brand)' : '2px solid transparent',
                                 }}
@@ -158,7 +158,7 @@ export default function Calendar({ selectedDate, onSelectDate }: CalendarProps) 
                                 className="flex flex-col items-center px-3 py-2 rounded-xl min-w-[52px] min-h-[56px] transition-all"
                                 style={{
                                     backgroundColor: isSelected ? 'var(--brand)' : 'transparent',
-                                    color: isSelected ? '#FFFFFF' : isToday ? 'var(--brand)' : 'var(--text-secondary)',
+                                    color: isSelected ? 'var(--brand-text)' : isToday ? 'var(--brand)' : 'var(--text-secondary)',
                                 }}
                             >
                                 <span className="text-[10px] font-medium uppercase">

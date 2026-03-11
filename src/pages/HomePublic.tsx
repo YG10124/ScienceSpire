@@ -239,7 +239,7 @@ export default function HomePublic({ onNavigate, onSignIn }: HomePublicProps) {
             <button
               onClick={onSignIn}
               className="px-4 py-2.5 rounded-xl text-sm font-semibold min-h-[44px]"
-              style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+              style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
             >
               Sign up
             </button>
@@ -325,7 +325,7 @@ export default function HomePublic({ onNavigate, onSignIn }: HomePublicProps) {
               <button
                 onClick={onSignIn}
                 className="inline-flex items-center gap-2 font-semibold px-6 py-3.5 rounded-xl text-sm min-h-[48px] shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
-                style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+                style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
               >
                 Create an account <ArrowRight size={16} />
               </button>
@@ -635,7 +635,7 @@ export default function HomePublic({ onNavigate, onSignIn }: HomePublicProps) {
             <button
               onClick={onSignIn}
               className="inline-flex items-center gap-2 font-semibold px-4 py-2.5 rounded-xl text-sm min-h-[44px]"
-              style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+              style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
             >
               Create account <ArrowRight size={14} />
             </button>
@@ -672,7 +672,7 @@ export default function HomePublic({ onNavigate, onSignIn }: HomePublicProps) {
               <button
                 onClick={onSignIn}
                 className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold min-h-[44px]"
-                style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+                style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
               >
                 Sign up
               </button>

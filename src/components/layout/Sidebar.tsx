@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import {
     Home, LayoutDashboard, Calendar, BookOpen, Users,
-    FolderOpen, Palette, Rocket, ChevronLeft, ChevronRight, X, GraduationCap
+    FolderOpen, Palette, Rocket, ChevronLeft, ChevronRight, X, GraduationCap, Trophy
 } from 'lucide-react';
 import { useLocalStore } from '@/store/useLocalStore';
+import LevelChip from '@/components/gamification/LevelChip';
 
 interface SidebarProps {
     currentPage: string;
@@ -24,6 +25,7 @@ const navItems = [
     { id: 'community', label: 'Community', icon: Users },
     { id: 'portfolio', label: 'Portfolio', icon: FolderOpen },
     { id: 'creator', label: 'Creator Studio', icon: Palette },
+    { id: 'leaderboard', label: 'Leaderboard', icon: Trophy },
 ];
 
 export default function Sidebar({
@@ -159,6 +161,11 @@ export default function Sidebar({
 
                 {/* User section */}
                 <div className="p-2 border-t" style={{ borderColor: 'var(--border-light)' }}>
+                    {sidebarExpanded && (
+                        <div className="px-3 pb-2">
+                            <LevelChip />
+                        </div>
+                    )}
                     <button
                         onClick={() => handleNav('profile')}
                         className="w-full flex items-center gap-3 rounded-lg text-sm transition-colors min-h-[44px]"
@@ -226,9 +233,10 @@ export default function Sidebar({
                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1D4ED8] to-[#3B82F6] flex items-center justify-center text-white text-sm font-bold">
                                 {avatarInitials}
                             </div>
-                            <div>
+                            <div className="flex-1 min-w-0">
                                 <div className="font-semibold" style={{ color: 'var(--text)' }}>{displayName}</div>
-                                <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>{email}</div>
+                                <div className="text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>{email}</div>
+                                <LevelChip />
                             </div>
                         </div>
                     </div>

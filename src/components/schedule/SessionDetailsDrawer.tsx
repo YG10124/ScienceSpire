@@ -162,7 +162,7 @@ export default function SessionDetailsDrawer({ session, onClose, onReserve, onAd
                     {session.isMySession ? (
                         <button
                             className="w-full inline-flex items-center justify-center gap-2 font-semibold px-5 py-3.5 rounded-xl text-sm transition-colors min-h-[48px] shadow-sm"
-                            style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+                            style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                         >
                             <Video size={16} /> Join Session
                         </button>
@@ -170,7 +170,7 @@ export default function SessionDetailsDrawer({ session, onClose, onReserve, onAd
                         <button
                             onClick={onReserve}
                             className="w-full inline-flex items-center justify-center gap-2 font-semibold px-5 py-3.5 rounded-xl text-sm transition-colors min-h-[48px] shadow-sm"
-                            style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+                            style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                         >
                             Reserve Spot ({spotsLeft} left)
                         </button>

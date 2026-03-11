@@ -208,7 +208,7 @@ export default function Onboarding({ onNavigate }: OnboardingProps) {
             const Icon = step.icon;
             return (
               <button key={step.id} onClick={() => setCurrentStep(i)} className={`flex flex-col items-center gap-1 transition-all ${currentStep === i ? 'scale-110' : ''}`}>
-                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all" style={{ backgroundColor: completed[i] ? 'var(--success)' : currentStep === i ? 'var(--brand)' : 'var(--bg)', color: completed[i] || currentStep === i ? '#FFFFFF' : 'var(--text-secondary)' }}>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all" style={{ backgroundColor: completed[i] ? 'var(--success)' : currentStep === i ? 'var(--brand)' : 'var(--bg)', color: completed[i] || currentStep === i ? 'var(--brand-text)' : 'var(--text-secondary)' }}>
                   {completed[i] ? <Check size={14} /> : <Icon size={14} />}
                 </div>
                 <span className="text-[9px] font-medium hidden sm:block" style={{ color: currentStep === i ? 'var(--brand)' : 'var(--text-secondary)' }}>{step.title.split(' ').slice(0, 2).join(' ')}</span>
@@ -250,7 +250,7 @@ export default function Onboarding({ onNavigate }: OnboardingProps) {
             <button onClick={() => setCurrentStep(Math.max(0, currentStep - 1))} disabled={currentStep === 0} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium min-h-[44px] border" style={{ borderColor: currentStep === 0 ? 'var(--border-light)' : 'var(--border)', color: currentStep === 0 ? 'var(--text-muted)' : 'var(--text-secondary)' }}>
               <ChevronLeft size={16} /> Previous
             </button>
-            <button onClick={handleComplete} className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm min-h-[48px] shadow-sm" style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}>
+            <button onClick={handleComplete} className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm min-h-[48px] shadow-sm" style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}>
               {completed[currentStep] ? 'Next' : 'Complete & Continue'} <ChevronRight size={16} />
             </button>
           </div>

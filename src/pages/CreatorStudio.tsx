@@ -4,6 +4,7 @@ import {
   ChevronRight, ArrowLeft, Eye, Globe, Tag,
   Clock, BarChart3, Info, Check, X, Plus, Trash2,
 } from 'lucide-react';
+import { awardXP } from '@/store/gamificationModule';
 import type { BreadcrumbItem } from '@/config/site';
 
 interface QuizQuestion {
@@ -240,6 +241,7 @@ export default function CreatorStudio({ onBreadcrumbChange }: CreatorStudioProps
   };
 
   const handlePublish = () => {
+    awardXP('content_created', 75);
     const template = templates.find(t => t.id === selectedTemplate)!;
     const now = 'just now';
     const newCreation: Creation = {
@@ -584,7 +586,7 @@ export default function CreatorStudio({ onBreadcrumbChange }: CreatorStudioProps
                   <button
                     onClick={() => setStep('meta')}
                     className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm min-h-[48px]"
-                    style={{ backgroundColor: 'var(--brand)', color: '#ffffff' }}
+                    style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                   >
                     Continue <ChevronRight size={16} />
                   </button>
@@ -696,7 +698,7 @@ export default function CreatorStudio({ onBreadcrumbChange }: CreatorStudioProps
               <button
                 onClick={() => setStep('preview')}
                 className="inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm min-h-[48px]"
-                style={{ backgroundColor: 'var(--brand)', color: '#ffffff' }}
+                style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
               >
                 Preview <Eye size={16} />
               </button>

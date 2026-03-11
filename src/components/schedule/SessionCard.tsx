@@ -95,7 +95,7 @@ export default function SessionCard({ session, onViewDetails, onReserve }: Sessi
                         {session.isMySession ? (
                             <button
                                 className="inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors min-h-[48px] shadow-sm"
-                                style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+                                style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                             >
                                 <Video size={16} />
                                 Join now

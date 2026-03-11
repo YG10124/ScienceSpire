@@ -59,7 +59,7 @@ export default function SiteFooter({ onNavigate, isSignedIn }: SiteFooterProps) 
             <button
               onClick={() => onNavigate('signup')}
               className="mt-3 px-4 py-2.5 rounded-lg text-sm font-semibold min-h-[44px]"
-              style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+              style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
             >
               Create account
             </button>

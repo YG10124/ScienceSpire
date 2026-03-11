@@ -16,7 +16,7 @@ export default function AboutPage({ onNavigate }: AboutPageProps) {
           <button
             onClick={() => onNavigate('signup')}
             className="px-5 py-3 rounded-xl text-sm font-semibold min-h-[44px]"
-            style={{ backgroundColor: 'var(--brand)', color: '#FFFFFF' }}
+            style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
           >
             Sign up
           </button>

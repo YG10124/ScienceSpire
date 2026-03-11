@@ -13,11 +13,16 @@ import CommunityPage from './pages/CommunityPage';
 import PortfolioPage from './pages/PortfolioPage';
 import CreatorStudioPage from './pages/CreatorStudioPage';
 import LessonsPage from './pages/LessonsPage';
+import LeaderboardPage from './pages/LeaderboardPage';
 import Onboarding from './pages/Onboarding';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
 import AboutPage from './pages/AboutPage';
 import { useLocalStore } from './store/useLocalStore';
+import { GamificationProvider } from './store/useGamificationStore';
+import { processLogin } from './store/gamificationModule';
+import XPToast from './components/gamification/XPToast';
+import BadgeUnlockModal from './components/gamification/BadgeUnlockModal';
 import { PAGE_META, type AppPage, type BreadcrumbItem } from './config/site';
 
 export default function App() {
@@ -27,7 +32,15 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [detailBreadcrumbs, setDetailBreadcrumbs] = useState<BreadcrumbItem[]>([]);
   const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
-  const { isSignedIn, signOut } = useLocalStore();
+  const { isSignedIn, signOut, currentUser } = useLocalStore();
+
+  // Award daily login XP when user is signed in
+  useEffect(() => {
+    if (isSignedIn) processLogin();
+  }, [isSignedIn]);
+
+  const displayName = currentUser?.displayName || currentUser?.username || 'You';
+  const avatarInitials = displayName.split(' ').filter(Boolean).slice(0, 2).map((p: string) => p[0]?.toUpperCase() ?? '').join('') || 'YO';
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)');
@@ -136,6 +149,8 @@ export default function App() {
         return <PortfolioPage onBreadcrumbChange={setDetailBreadcrumbs} />;
       case 'creator':
         return <CreatorStudioPage onBreadcrumbChange={setDetailBreadcrumbs} />;
+      case 'leaderboard':
+        return <LeaderboardPage onNavigate={navigate} onBreadcrumbChange={setDetailBreadcrumbs} />;
       case 'onboarding':
         return <Onboarding onNavigate={navigate} />;
       case 'profile':
@@ -158,52 +173,61 @@ export default function App() {
   const shouldShowFooter = !isAuthFullscreen && !isUnsignedHome;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
-      {!isAuthFullscreen && (
-        <>
-          <Sidebar
-            currentPage={currentPage}
-            onNavigate={navigate}
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            sidebarExpanded={sidebarExpanded}
-            setSidebarExpanded={setSidebarExpanded}
-            isSignedIn={isSignedIn}
-          />
-          {!isUnsignedHome && (
-            <TopBar
+    <GamificationProvider currentUserName={displayName} currentUserInitials={avatarInitials}>
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
+        {!isAuthFullscreen && (
+          <>
+            <Sidebar
               currentPage={currentPage}
               onNavigate={navigate}
-              onOpenSidebar={() => setSidebarOpen(true)}
-              isSignedIn={isSignedIn}
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
               sidebarExpanded={sidebarExpanded}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
+              setSidebarExpanded={setSidebarExpanded}
+              isSignedIn={isSignedIn}
             />
-          )}
-        </>
-      )}
-
-      <main
-        className={isAuthFullscreen ? '' : `${isUnsignedHome ? 'pb-20 lg:pb-6' : 'pt-14 pb-20 lg:pb-6'} min-h-screen transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]`}
-        style={{ marginLeft: (!isAuthFullscreen && isDesktop) ? sidebarDesktopWidth : 0 }}
-      >
-        {isAuthFullscreen ? (
-          renderPage()
-        ) : (
-          <div className="p-4 lg:p-6 max-w-7xl mx-auto animate-page-enter" key={currentPage}>
-            <Breadcrumbs items={breadcrumbs} onNavigate={navigate} />
-            {renderPage()}
-          </div>
+            {!isUnsignedHome && (
+              <TopBar
+                currentPage={currentPage}
+                onNavigate={navigate}
+                onOpenSidebar={() => setSidebarOpen(true)}
+                isSignedIn={isSignedIn}
+                sidebarExpanded={sidebarExpanded}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+              />
+            )}
+          </>
         )}
-      </main>
 
-      {shouldShowFooter && <SiteFooter onNavigate={navigate} isSignedIn={isSignedIn} />}
+        <main
+          className={isAuthFullscreen ? '' : `${isUnsignedHome ? 'pb-20 lg:pb-6' : 'pt-14 pb-20 lg:pb-6'} min-h-screen transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]`}
+          style={{ marginLeft: (!isAuthFullscreen && isDesktop) ? sidebarDesktopWidth : 0 }}
+        >
+          {isAuthFullscreen ? (
+            renderPage()
+          ) : (
+            <div className="p-4 lg:p-6 max-w-7xl mx-auto animate-page-enter" key={currentPage}>
+              <Breadcrumbs items={breadcrumbs} onNavigate={navigate} />
+              {renderPage()}
+            </div>
+          )}
+        </main>
 
-      {isSignedIn && !isAuthFullscreen && (
-        <BottomNav currentPage={currentPage} onNavigate={navigate} />
-      )}
+        {shouldShowFooter && <SiteFooter onNavigate={navigate} isSignedIn={isSignedIn} />}
 
-    </div>
+        {isSignedIn && !isAuthFullscreen && (
+          <BottomNav currentPage={currentPage} onNavigate={navigate} />
+        )}
+
+        {/* Gamification overlays — portals at root level */}
+        {isSignedIn && (
+          <>
+            <XPToast />
+            <BadgeUnlockModal />
+          </>
+        )}
+      </div>
+    </GamificationProvider>
   );
 }

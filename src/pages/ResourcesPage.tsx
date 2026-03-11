@@ -5,6 +5,7 @@ import {
   Share2, Bookmark, Grid, List, CheckCircle2
 } from 'lucide-react';
 import { useLocalStore } from '@/store/useLocalStore';
+import { awardXP } from '@/store/gamificationModule';
 import type { BreadcrumbItem } from '@/config/site';
 
 interface ResourcesPageProps {
@@ -296,6 +297,9 @@ export default function ResourcesPage({ searchQuery: searchProp = '', onSearchCh
       showToast('Answer all questions before submitting.');
       return;
     }
+    if (!quizSubmitted[res.id]) {
+      awardXP('quiz_complete', 50);
+    }
     setQuizSubmitted(prev => ({ ...prev, [res.id]: true }));
     const score = res.quiz.reduce((acc, q, i) => acc + (answers[i] === q.correctIndex ? 1 : 0), 0);
     addNotification(`Quiz completed: ${res.title} (${score}/${total})`);
@@ -451,7 +455,7 @@ export default function ResourcesPage({ searchQuery: searchProp = '', onSearchCh
           <div className="space-y-4">
             <div className="rounded-xl p-5 border" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
               <div className="flex flex-col gap-2 mt-2">
-                <button onClick={() => { toggleSaved(`resource-${res.id}`); showToast(isSaved ? 'Removed from playlist' : 'Added to playlist'); }} className="w-full inline-flex items-center justify-center gap-2 font-semibold px-4 py-3 rounded-xl text-sm min-h-[48px] transition-colors" style={{ backgroundColor: isSaved ? 'var(--warning)' : 'var(--brand)', color: '#FFFFFF' }}>
+                <button onClick={() => { toggleSaved(`resource-${res.id}`); showToast(isSaved ? 'Removed from playlist' : 'Added to playlist'); }} className="w-full inline-flex items-center justify-center gap-2 font-semibold px-4 py-3 rounded-xl text-sm min-h-[48px] transition-colors" style={{ backgroundColor: isSaved ? 'var(--warning)' : 'var(--brand)', color: 'var(--brand-text)' }}>
                   <Bookmark size={16} fill={isSaved ? '#FFFFFF' : 'none'} /> {isSaved ? 'In Playlist' : 'Add to Playlist'}
                 </button>
                 <div className="flex gap-2">
@@ -491,7 +495,7 @@ export default function ResourcesPage({ searchQuery: searchProp = '', onSearchCh
             {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-secondary)' }} aria-label="Clear search"><X size={16} /></button>}
           </div>
           <div className="flex gap-2">
-            <button onClick={() => setShowFilters(!showFilters)} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium min-h-[44px] transition-colors border" style={{ backgroundColor: showFilters ? 'var(--brand)' : 'var(--card)', color: showFilters ? '#FFFFFF' : 'var(--text)', borderColor: showFilters ? 'var(--brand)' : 'var(--border)' }}>
+            <button onClick={() => setShowFilters(!showFilters)} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium min-h-[44px] transition-colors border" style={{ backgroundColor: showFilters ? 'var(--brand)' : 'var(--card)', color: showFilters ? 'var(--brand-text)' : 'var(--text)', borderColor: showFilters ? 'var(--brand)' : 'var(--border)' }}>
               <Filter size={16} /> Filters
             </button>
             <div className="hidden sm:flex rounded-lg p-1" style={{ backgroundColor: 'var(--bg)' }}>

@@ -1924,7 +1924,7 @@ export default function LessonsPage({ onBreadcrumbChange }: LessonsPageProps) {
                 <button
                   onClick={() => setQuizPhase('active')}
                   className="px-4 py-2 rounded-lg text-sm font-semibold transition-all"
-                  style={{ backgroundColor: 'var(--brand)', color: '#fff' }}
+                  style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                 >
                   Start quiz
                 </button>
@@ -1989,7 +1989,7 @@ export default function LessonsPage({ onBreadcrumbChange }: LessonsPageProps) {
                     onClick={submitQuiz}
                     disabled={Object.keys(answers).length < lesson.quiz.length}
                     className="w-full py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
-                    style={{ backgroundColor: 'var(--brand)', color: '#fff' }}
+                    style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
                   >
                     Submit answers ({Object.keys(answers).length}/{lesson.quiz.length} answered)
                   </button>
@@ -2038,7 +2038,7 @@ export default function LessonsPage({ onBreadcrumbChange }: LessonsPageProps) {
               <button
                 onClick={() => setLessonId(nextEntry.lesson.id)}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
-                style={{ backgroundColor: 'var(--brand)', color: '#fff' }}
+                style={{ backgroundColor: 'var(--brand)', color: 'var(--brand-text)' }}
               >
                 Next lesson <ChevronRight size={16} />
               </button>
